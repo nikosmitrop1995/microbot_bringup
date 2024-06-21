@@ -38,17 +38,10 @@ def generate_launch_description():
             remappings={('/cmd_vel', launch.substitutions.LaunchConfiguration('joy_vel'))},
         ),
 
-        # launch_ros.actions.Node(
-        #     package='microbot_twist_allocator',
-        #     executable='microbot_twist_allocator_node',
-        #     name='microbot_twist_allocator_node'
-        # ),
-
-#        launch_ros.actions.Node(
-#            package='micro_ros_agent',
-#            executable='micro_ros_agent',
-#            name='micro_ros_agent',
-#            # arguments=['serial', '--dev', '/dev/ttyACM0']
-#            arguments=['udp4', '--port', '8888']
-#        )
+       launch_ros.actions.Node(
+           package='micro_ros_agent',
+           executable='micro_ros_agent',
+           name='micro_ros_agent',
+           arguments=['udp4', '--port', '8888']
+       )
     ])
