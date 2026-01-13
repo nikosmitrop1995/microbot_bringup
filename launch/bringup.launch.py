@@ -1,3 +1,4 @@
+"""Launch file for microbot bringup."""
 import os
 
 from ament_index_python.packages import get_package_share_directory
@@ -7,18 +8,25 @@ import launch_ros.actions
 
 
 def generate_launch_description():
+    """Generate launch description for microbot bringup."""
     joy_config = launch.substitutions.LaunchConfiguration('joy_config')
     joy_dev = launch.substitutions.LaunchConfiguration('joy_dev')
-    config_filepath = launch.substitutions.LaunchConfiguration('config_filepath')
+    config_filepath = launch.substitutions.LaunchConfiguration(
+        'config_filepath')
 
     return launch.LaunchDescription([
-        launch.actions.DeclareLaunchArgument('joy_vel', default_value='cmd_vel'),
-        launch.actions.DeclareLaunchArgument('joy_config', default_value='ps5'),
-        launch.actions.DeclareLaunchArgument('joy_dev', default_value='/dev/input/js0'),
+        launch.actions.DeclareLaunchArgument(
+            'joy_vel', default_value='cmd_vel'),
+        launch.actions.DeclareLaunchArgument(
+            'joy_config', default_value='ps5'),
+        launch.actions.DeclareLaunchArgument(
+            'joy_dev', default_value='/dev/input/js0'),
         launch.actions.DeclareLaunchArgument('config_filepath', default_value=[
             launch.substitutions.TextSubstitution(text=os.path.join(
-                get_package_share_directory('microbot_bringup'), 'config', '')),
-            joy_config, launch.substitutions.TextSubstitution(text='.config.yaml')]),
+                get_package_share_directory('microbot_bringup'),
+                'config', '')),
+            joy_config,
+            launch.substitutions.TextSubstitution(text='.config.yaml')]),
 
         launch_ros.actions.Node(
             package='joy',
@@ -35,13 +43,15 @@ def generate_launch_description():
             executable='teleop_node',
             name='teleop_twist_joy_node',
             parameters=[config_filepath],
-            remappings={('/cmd_vel', launch.substitutions.LaunchConfiguration('joy_vel'))},
+            remappings={(
+                '/cmd_vel',
+                launch.substitutions.LaunchConfiguration('joy_vel'))},
         ),
 
-       launch_ros.actions.Node(
-           package='micro_ros_agent',
-           executable='micro_ros_agent',
-           name='micro_ros_agent',
-           arguments=['udp4', '--port', '8888']
-       )
+        launch_ros.actions.Node(
+            package='micro_ros_agent',
+            executable='micro_ros_agent',
+            name='micro_ros_agent',
+            arguments=['udp4', '--port', '8888']
+        )
     ])
